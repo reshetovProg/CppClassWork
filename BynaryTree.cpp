@@ -6,6 +6,7 @@ struct Node {
 	T id;
 	Node<T>* left = nullptr;
 	Node<T>* right = nullptr;
+	Node<T>* parent = nullptr;
 };
 
 template<typename T>
@@ -29,6 +30,7 @@ public:
 			while (true) {
 				if (node->id > iter->id) {
 					if (iter->right == nullptr) {
+						node->parent = iter;
 						iter->right = node;
 						break;
 					}
@@ -36,6 +38,7 @@ public:
 				}
 				else {
 					if (iter->left == nullptr) {
+						node->parent = iter;
 						iter->left = node;
 						break;
 					}
@@ -56,26 +59,45 @@ public:
 			print(node->right);
 		}
 	}
+	T search(T data) {
+		Node<T>* iter = root;
+		while (true) {
+			if (data == iter->id) return iter->id;
+			else if (data > iter->id) {
+				if (iter->right == nullptr) {
+					return -1;
+				}
+				else iter = iter->right;
+			}
+			else if (data < iter->id) {
+				if (iter->left == nullptr) {
+					return -1;
+				}
+				else iter = iter->left;
+			}
+		}
+	}
+	void remove(T data) {
+
+	}
 };
 
 
 int main()
 {
-	BinaryTree<int> tree(15);
-	tree.add(9);
-	tree.add(1);
-	tree.add(0);
-	tree.add(19);
-	tree.add(25);
-	tree.add(24);
-	tree.add(18);
-	tree.add(16);
-	tree.add(17);
-	tree.add(14);
-	tree.add(30);
-	tree.add(5);
+	BinaryTree<double> tree(15);
 	tree.add(10);
+	tree.add(8);
+	tree.add(6);
+	tree.add(12);
+	tree.add(11);
+	tree.add(11.5);
+	tree.add(14);
+	tree.add(13);
+	tree.add(20);
+	tree.add(24);
 	tree.print();
+
 
 }
 
