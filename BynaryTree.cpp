@@ -59,27 +59,93 @@ public:
 			print(node->right);
 		}
 	}
-	T search(T data) {
+	Node<T>* search(T data) {
 		Node<T>* iter = root;
 		while (true) {
-			if (data == iter->id) return iter->id;
+			if (data == iter->id) return iter;
 			else if (data > iter->id) {
 				if (iter->right == nullptr) {
-					return -1;
+					return nullptr;
 				}
 				else iter = iter->right;
 			}
 			else if (data < iter->id) {
 				if (iter->left == nullptr) {
-					return -1;
+					return nullptr;
 				}
 				else iter = iter->left;
 			}
 		}
 	}
 	void remove(T data) {
-
+		Node<T>* node = search(data);
+		if (node->left == nullptr && node->right == nullptr) {
+			if (node->parent->left == node) {
+				node->parent->left = nullptr;
+			}
+			else node->parent->right = nullptr;
+			delete node;
+		}
+		else if (node->left == nullptr) {
+			if (node->parent->left == node) {
+				node->parent->left = node->right;
+			}
+			else node->parent->right = node->right;
+			delete node;
+		}
+		else if (node->right == nullptr) {
+			if (node->parent->left == node) {
+				node->parent->left = node->left;
+			}
+			else node->parent->right = node->left;
+			delete node;
+		}
+		else {
+			if (node->id < node->parent->id) {
+				Node<T>* iter = node->right;
+				while (iter->left != nullptr) {
+					iter = iter->left;
+				}
+				Node<T>* tmp = node;
+				node = iter;				
+				if (node->left == nullptr && node->right == nullptr) {
+					node->parent->left = nullptr;					
+				}
+				else {					
+					node->parent->left = node->right;					
+				}
+				node->parent = tmp->parent;
+				node->left = tmp->left;
+				node->right = tmp->right;
+				node->parent->left = node;
+				node->left->parent = node;
+				node->right->parent = node;
+				delete tmp;
+			}
+			else {
+				Node<T>* iter = node->left;
+				while (iter->right != nullptr) {
+					iter = iter->right;
+				}
+				Node<T>* tmp = node;
+				node = iter;
+				if (node->left == nullptr && node->right == nullptr) {
+					node->parent->right = nullptr;
+				}
+				else {
+					node->parent->right = node->left;
+				}
+				node->parent = tmp->parent;
+				node->left = tmp->left;
+				node->right = tmp->right;			
+				node->parent->right = node;
+				node->left->parent = node;
+				node->right->parent = node;
+				delete tmp;
+			}
+		}
 	}
+	size--;
 };
 
 
@@ -96,8 +162,12 @@ int main()
 	tree.add(13);
 	tree.add(20);
 	tree.add(24);
+	tree.add(19);
+	tree.add(18);
+	tree.add(19.5);
 	tree.print();
-
-
+	cout << endl;
+	tree.remove(15);
+	tree.print();
 }
 
