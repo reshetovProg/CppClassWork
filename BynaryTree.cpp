@@ -101,7 +101,31 @@ public:
 			delete node;
 		}
 		else {
-			if (node->id < node->parent->id) {
+			if (node == root) {
+				Node<T>* iter = node->right;
+				while (iter->left != nullptr) {
+					iter = iter->left;
+				}
+				Node<T>* tmp = node;
+				node = iter;
+				if (node->left == nullptr && node->right == nullptr) {
+					node->parent->left = nullptr;
+				}
+				else {	
+					node->parent->left = node->right;
+				}
+				//node->parent = tmp->parent;
+				node->left = tmp->left;
+				node->right = tmp->right;
+				//node->parent->left = node;
+				node->left->parent = node;
+				node->right->parent = node;
+				node->parent = nullptr;
+				delete tmp;
+				root = node;
+
+			}
+			else if (node->id < node->parent->id) {
 				Node<T>* iter = node->right;
 				while (iter->left != nullptr) {
 					iter = iter->left;
@@ -144,8 +168,8 @@ public:
 				delete tmp;
 			}
 		}
+		size--;
 	}
-	size--;
 };
 
 
